@@ -3,14 +3,15 @@
 ## 1. System Design
 
 **a. Initial design**
-
-- Briefly describe your initial UML design.
-- What classes did you include, and what responsibilities did you assign to each?
+My initial design includes four main classes: Owner, Pet, Task, and Scheduler.
+The Owner class is responsible for managing pets. It stores basic owner information and keeps a list of pets.
+The Pet class represents each individual pet and stores attributes like name, species, and age. It also manages a list of tasks associated with that pet.
+The Task class represents a specific pet care activity, such as feeding or walking. It includes attributes like title, due date, duration, priority, and completion status.
+The Scheduler class is responsible for organizing and selecting tasks to generate a daily plan. It considers constraints such as time and priority to decide which tasks should be included.
 
 **b. Design changes**
-
-- Did your design change during implementation?
-- If yes, describe at least one change and why you made it.
+During the design process, I realized the importance of separating responsibilities between classes. Initially, I considered storing all tasks directly within the Pet class, but I introduced a Scheduler class to centralize task management.
+This change makes the system more organized and scalable, as the Scheduler can handle logic like filtering tasks by date and priority without overloading the Pet class.
 
 ---
 
@@ -23,8 +24,9 @@
 
 **b. Tradeoffs**
 
-- Describe one tradeoff your scheduler makes.
-- Why is that tradeoff reasonable for this scenario?
+My scheduler detects conflicts only when tasks have the exact same start time.
+It does not account for overlapping durations, which simplifies the implementation but may miss more complex scheduling conflicts.
+This tradeoff keeps the system efficient and easier to understand.
 
 ---
 
