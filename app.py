@@ -39,6 +39,7 @@ with col2:
 with col3:
     priority = st.selectbox("Priority", ["low", "medium", "high"], index=2)
 
+task_time = st.text_input("Time (HH:MM)", value="09:00")
 # -------------------------
 # ADD TASK BUTTON
 # -------------------------
@@ -49,7 +50,8 @@ if st.button("Add task"):
         task_title,
         date.today(),
         int(duration),
-        priority_map[priority]
+        priority_map[priority],
+        task_time 
     )
 
     st.session_state.pet.add_task(new_task)
@@ -76,10 +78,26 @@ st.subheader("Today's Schedule")
 
 if st.button("Generate schedule"):
     scheduler = Scheduler()
-    schedule = scheduler.generate_schedule(st.session_state.owner)
 
-    if schedule:
-        for task in schedule:
-            st.write(f"- {task.title} (Priority: {task.priority})")
+    # Get all tasks
+    tasks = st.session_state.owner.get_all_tasks()
+
+    # Sort tasks by time
+    sorted_tasks = scheduler.sort_by_time(tasks)
+
+    # Detect conflicts
+    conflicts = scheduler.detect_conflicts(tasks)
+
+    st.subheader("📅 Today's Schedule")
+
+    if sorted_tasks:
+        for task in sorted_tasks:
+            st.success(f"{task.title} at {task.time} (Priority: {task.priority})")
     else:
-        st.warning("No tasks scheduled for today.")
+        st.warning("No tasks available.")
+
+    # Show conflicts if any
+    if conflicts:
+        st.subheader("⚠️ Conflicts Detected")
+        for c in conflicts:
+            st.warning(c)
